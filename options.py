@@ -19,7 +19,7 @@ class BaseOptions:
         parser.add_argument('--batch_size', type=int, default=1, help='input batch size')
         parser.add_argument('--gpu_ids', type=str, default='0', help='gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU')
         parser.add_argument('--load_size', type=int, default=224, help='Scale images to this size.')
-        parser.add_argument('--num_workers', default=4, type=int, help='# threads for loading data')
+        parser.add_argument('--num_workers', default=0, type=int, help='# threads for loading data')
 
         self.initialized = True
         return parser
@@ -35,6 +35,9 @@ class BaseOptions:
         opt.gpu_ids = [int(i) for i in str_ids if int(i) >= 0]
         if len(opt.gpu_ids) > 0:
             torch.cuda.set_device(opt.gpu_ids[0])
+
+        if not self.isTrain:
+            opt.classifiers = opt.classifiers.split(',')
 
         self.parser = parser
         return opt
@@ -55,6 +58,10 @@ class EvalOptions(BaseOptions):
     def initialize(self, parser):
         BaseOptions.initialize(self, parser)
         parser.add_argument('--which_epoch', type=str, help='Epoch # to load. Leave empty for pretrained weights')
+        parser.add_argument('--classifiers', type=str, default='')
+        parser.add_argument('--num_splits', type=int, default=0)
+        parser.add_argument('--use_cuml', action='store_true', help='Speed up classfiers with GPU using CuML.')
+        parser.add_argument('--use_thundersvm', action='store_true', help='Speed up SVM with GPU using ThunderSVM.')
         parser.add_argument('--tsne_pca_dim', type=int, default=50)
         parser.add_argument('--tsne_perplexity', type=int, default=30)
         parser.add_argument('--tsne_iter', type=int, default=1000)

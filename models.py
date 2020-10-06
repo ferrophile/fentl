@@ -75,7 +75,18 @@ class TorchVisionModel(nn.Module):
 class VGG11Model(TorchVisionModel):
     def get_model(self, opt):
         model = models.vgg11_bn(pretrained=True)
-        model.classifier = nn.Sequential(*list(model.classifier.children())[:-3])
+        seq = list(model.classifier.children())
+
+        if opt.isTrain:
+            features_dim = seq[-1].in_features
+            head = nn.Linear(features_dim, 10)
+            init.xavier_normal_(head.weight.data, 0.02)
+            init.constant_(head.bias.data, 0.0)
+            classifier = nn.Sequential(*seq[:-1], head)
+        else:
+            classifier = nn.Sequential(*seq[:-3])
+
+        model.classifier = classifier
         return model
 
 

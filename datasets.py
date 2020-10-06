@@ -38,9 +38,9 @@ class ImageNetDataset(torch.utils.data.Dataset):
 
         self.data = None
         if opt.dataset == 'mnist':
-            self.data = datasets.MNIST(root=opt.dataroot, train=train, transform=self.transform)
+            self.data = datasets.MNIST(root=opt.dataroot, train=train, download=True, transform=self.transform)
         elif opt.dataset == 'fashion':
-            self.data = datasets.FashionMNIST(root=opt.dataroot, train=train, transform=self.transform)
+            self.data = datasets.FashionMNIST(root=opt.dataroot, train=train, download=True, transform=self.transform)
         else:
             raise NotImplementedError
 

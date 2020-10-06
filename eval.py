@@ -1,20 +1,10 @@
 import numpy as np
 from tqdm import tqdm
 
-# Visualizations
-# from sklearn.decomposition import PCA
-# from sklearn.manifold import TSNE
-
-# Classifiers
-# from sklearn.linear_model import LogisticRegression
-# from sklearn.svm import SVC
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-from sklearn.ensemble import RandomForestClassifier
-
 from options import EvalOptions
 from datasets import create_dataloader
 from models import create_model
-from utils.stats import run_classifiers, get_stats
+from utils.stats import load_classifiers, run_classifiers, get_stats
 from utils.util import load_network
 
 
@@ -31,6 +21,7 @@ def extract_features(dataloader, model):
 
     features = np.concatenate(features, axis=0)
     labels = np.concatenate(labels, axis=0)
+
     return features, labels
 
 
@@ -47,13 +38,25 @@ def eval_data():
     print("Extracting test set features...")
     test_data = extract_features(test_dataloader, model)
 
-    classifiers = {
-        # 'log_reg': LogisticRegression(solver='saga', max_iter=1000),
-        # 'svm': SVC(),
-        'lda': LinearDiscriminantAnalysis(),
-        'rand_forest': RandomForestClassifier()
-    }
-    run_classifiers(classifiers, train_data, test_data)
+    classfiers = load_classifiers(opt)
+
+    '''
+    if opt.num_splits > 0:
+        train_features, train_labels = train_data
+        split_ids = np.linspace(0, len(train_labels), opt.num_splits + 1, dtype=np.int)
+        for i in range(opt.num_splits):
+            test_mask = np.zeros_like(train_labels, dtype=np.int)
+            test_mask[split_ids[i]:split_ids[i+1]] = 1
+            train_mask = 1 - test_mask
+
+            train_split_data = (train_features[train_mask], train_labels[train_mask])
+            test_split_data = (train_features[test_mask], train_labels[test_mask])
+
+            print('Running split {:d}...'.format(i+1))
+            run_classifiers(classfiers, train_split_data, test_split_data)
+    else:
+    '''
+    run_classifiers(classfiers, train_data, test_data)
 
     stats, measures = get_stats(train_data)
     for m in measures.keys():
