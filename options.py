@@ -59,12 +59,12 @@ class EvalOptions(BaseOptions):
         BaseOptions.initialize(self, parser)
         parser.add_argument('--which_epoch', type=str, help='Epoch # to load. Leave empty for pretrained weights')
         parser.add_argument('--classifiers', type=str, default='')
-        parser.add_argument('--num_splits', type=int, default=0)
+        # parser.add_argument('--num_splits', type=int, default=0)
         parser.add_argument('--use_cuml', action='store_true', help='Speed up classfiers with GPU using CuML.')
         parser.add_argument('--use_thundersvm', action='store_true', help='Speed up SVM with GPU using ThunderSVM.')
-        parser.add_argument('--tsne_pca_dim', type=int, default=50)
-        parser.add_argument('--tsne_perplexity', type=int, default=30)
-        parser.add_argument('--tsne_iter', type=int, default=1000)
+        # parser.add_argument('--tsne_pca_dim', type=int, default=50)
+        # parser.add_argument('--tsne_perplexity', type=int, default=30)
+        # parser.add_argument('--tsne_iter', type=int, default=1000)
 
         self.isTrain = False
         return parser

@@ -90,7 +90,6 @@ def get_stats(data):
     between_cov_inv = la.pinv2(between_cov, cond=1e-5)
     within_cov_dispersion = np.trace(np.matmul(within_cov, between_cov_inv)) / K
 
-    '''
     class_means_norms = np.linalg.norm(class_means_centered, axis=1)
     equinorm_measure = np.std(class_means_norms) / np.mean(class_means_norms)
 
@@ -101,13 +100,12 @@ def get_stats(data):
 
     class_means_cov = np.abs(class_means_cov + 1/(K-1))
     max_angle_measure = class_means_cov.mean()
-    '''
 
     measures = {
         'within_cov': np.log10(within_cov_dispersion),
-        # 'equinorm': equinorm_measure,
-        # 'equiangle': equiangle_measure,
-        # 'max_angle': max_angle_measure
+        'equinorm': equinorm_measure,
+        'equiangle': equiangle_measure,
+        'max_angle': max_angle_measure
     }
 
     measures_finished_time = time.time()
