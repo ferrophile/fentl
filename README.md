@@ -13,6 +13,8 @@ In this repository we provide the code for the following tasks:
 - Classification algorithms on extracted features
 - Evaluation of *neural collapse* statistics proposed in [[2]](#2).
 
+Our findings are covered in detail in our [project report](https://github.com/ferrophile/fentl/blob/master/report.pdf).
+
 ## Environment
 
 The code is tested on PyTorch 1.5.1 and Python 3.7. Training is mostly done on the 
